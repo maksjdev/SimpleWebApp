@@ -46,31 +46,31 @@ public class UserDao {
         HashMap<String, String > usersByName = new HashMap<>();
         String userName = enteredUser;
         ResultSet rs = null;
-        UserBean user = new UserBean();
         Connection conn;
         CallableStatement cs;
         Statement state;
         //  в статик переменную -> DONE
-        String contentBuilder = "";
+        String textFromFile = "";
         try
         {
-            contentBuilder = new String(Files.readAllBytes(Paths.get(filename)));
+            textFromFile = new String(Files.readAllBytes(Paths.get(filename)));
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
 
-        String sqlQuery = contentBuilder;
+        String sqlQuery = textFromFile;
         String[] sqlQueryParts = sqlQuery.split("-");
             for (int i = 0; i < sqlQueryParts.length; i++) {
                 try {
                     conn = DBConnection.createConnection();
                     state = conn.createStatement();
                     state.execute(sqlQueryParts[i]);
+                    System.out.println(sqlQueryParts[i]);
                     state.execute(sqlQueryParts[i+1]);
+                    System.out.println(sqlQueryParts[i+1]);
                     i++;
-
                     cs = conn.prepareCall("{call getUserByNames(?)}");
                     cs.setString(1, userName);
                     cs.execute();
