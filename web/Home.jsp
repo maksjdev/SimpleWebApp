@@ -15,7 +15,7 @@
     <h1>
         Hello <%=request.getParameter("username")%>
     </h1>
-    <h1>Get Inormation about user:</h1>
+    <h1>Get Information about user:</h1>
     <br>
     <form name="form" action="LoginServlet" method="get">
         <table align="center">
@@ -31,6 +31,5 @@
         </table>
     </form>
 </center>
-
 </body>
 </html>

@@ -9,18 +9,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
+    private static String url = "jdbc:mysql://localhost:3306/test";
+    private static String username = "root";
+    private static String password = "0959";
+    private static String driver = "com.mysql.jdbc.Driver";
+
     public DBConnection() {
     }
 
     public static Connection createConnection() {
         Connection con = null;
-        String url = "jdbc:mysql://localhost:3306/test";
-        String username = "root";
-        String password = "0959";
+
+         // вынести в статические переменные -> DONE
+
 
         try {
             try {
-                Class.forName("com.mysql.jdbc.Driver");
+                Class.forName(driver);
             } catch (ClassNotFoundException var5) {
                 var5.printStackTrace();
             }

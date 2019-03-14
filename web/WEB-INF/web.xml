@@ -9,12 +9,12 @@
         <welcome-file>Login.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
-        <display-name>LoginServlet</display-name>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.mvc.controller.LoginServlet</servlet-class>
+        <display-name>UserServlet</display-name>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>com.mvc.controller.UserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
+        <servlet-name>UserServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
