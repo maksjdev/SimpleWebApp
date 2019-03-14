@@ -67,9 +67,7 @@ public class UserDao {
                     conn = DBConnection.createConnection();
                     state = conn.createStatement();
                     state.execute(sqlQueryParts[i]);
-                    System.out.println(sqlQueryParts[i]);
                     state.execute(sqlQueryParts[i+1]);
-                    System.out.println(sqlQueryParts[i+1]);
                     i++;
                     cs = conn.prepareCall("{call getUserByNames(?)}");
                     cs.setString(1, userName);
