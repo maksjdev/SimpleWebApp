@@ -2,6 +2,7 @@ package com.mvc.dao;
 
 import com.mvc.bean.UserBean;
 import com.mvc.util.DBConnection;
+import com.sun.jdi.Value;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 
 public class UserDao {
 
-    private static StringBuilder InsertUserQuery = new StringBuilder("INSERT INTO `test`.`users` (`userName`, `email`, `phone`) VALUES ('");
+    private static String sql = "INSERT INTO users (userName, email, phone) VALUES (?, ?, ?)";
     private static String filename = "D:\\AndersenProjects2\\SimpleWebApp\\web\\WEB-INF\\lib\\MyQueryUser.sql";
     private static StringBuilder thisIsFeature = new StringBuilder("')");
 
@@ -22,20 +23,17 @@ public class UserDao {
         String userName = userBean.getUserName();
         String email = userBean.getEmail();
         String phoneNumber = userBean.getPhoneNumber();
-
         Connection con = null;
-        Statement statement = null;
-
+        PreparedStatement preparedStatement = null;
         // вынести в статик константу класса -> DONE
-        String sql = InsertUserQuery +
-                userName + "', '" +
-                email + "', '" +
-                phoneNumber + thisIsFeature;
 
         try {
             con = DBConnection.createConnection();
-            statement = con.createStatement();
-            statement.execute(sql);
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2,email);
+            preparedStatement.setString(3,phoneNumber);
+            preparedStatement.execute();
             System.out.println("User Added to Database");
         }catch (SQLException e){
             e.printStackTrace();
@@ -46,16 +44,15 @@ public class UserDao {
         String textFromFile = "";
         Connection conn;
         Statement state;
-        try
-        {
+        try {
             textFromFile = new String(Files.readAllBytes(Paths.get(filename)));
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
         String sqlQuery = textFromFile;
         String[] sqlQueryParts = sqlQuery.split("-");
+
         for (int i = 0; i < sqlQueryParts.length; i++) {
             try {
                 conn = DBConnection.createConnection();
@@ -75,13 +72,12 @@ public class UserDao {
         Connection conn;
         CallableStatement cs;
         HashMap<String, String > usersByName = new HashMap<>();
-        String userName = enteredUser;
         initProcedure();
         //  в статик переменную -> DONE
         try {
             conn = DBConnection.createConnection();
             cs = conn.prepareCall("{call getUserByNames(?)}");
-            cs.setString(1, userName);
+            cs.setString(1, enteredUser);
             cs.execute();
             rs = cs.getResultSet();
             while (rs.next()) {
