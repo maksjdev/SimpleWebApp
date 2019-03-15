@@ -7,24 +7,28 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class UserServlet extends HttpServlet {
 
     public UserServlet() {
     }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userName = req.getParameter("username");
 
         UserService userService = new UserService();
         // создать сервис для работы с DAO не напрямую -> DONE
-        HashMap<String,String> resultView = userService.getUsersByName(userName);
+        HashMap<String,String> resultView = null;
+        try {
+            resultView = userService.getUsersByName(userName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         // перенести на фронт -> DONE
         req.setAttribute("resultView" , resultView);
         req.getRequestDispatcher("/UserMap.jsp").forward(req,resp);
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

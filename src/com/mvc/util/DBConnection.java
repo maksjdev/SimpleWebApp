@@ -14,28 +14,23 @@ public class DBConnection {
     private static String password = "0959";
     private static String driver = "com.mysql.jdbc.Driver";
 
-    public DBConnection() {
+    private DBConnection() {
     }
 
     public static Connection createConnection() {
         Connection con = null;
-
          // вынести в статические переменные -> DONE
-
-
         try {
             try {
                 Class.forName(driver);
             } catch (ClassNotFoundException var5) {
                 var5.printStackTrace();
             }
-
             con = DriverManager.getConnection(url, username, password);
             System.out.println(con);
         } catch (Exception var6) {
             var6.printStackTrace();
         }
-
         return con;
     }
 }

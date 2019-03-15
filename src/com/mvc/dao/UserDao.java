@@ -41,16 +41,11 @@ public class UserDao {
             e.printStackTrace();
         }
     }
-    // переименовать smth -> DONE
-    public HashMap<String, String> getUser(String enteredUser) throws IOException {
-        HashMap<String, String > usersByName = new HashMap<>();
-        String userName = enteredUser;
-        ResultSet rs = null;
-        Connection conn;
-        CallableStatement cs;
-        Statement state;
-        //  в статик переменную -> DONE
+
+    public void initProcedure(){
         String textFromFile = "";
+        Connection conn;
+        Statement state;
         try
         {
             textFromFile = new String(Files.readAllBytes(Paths.get(filename)));
@@ -59,31 +54,44 @@ public class UserDao {
         {
             e.printStackTrace();
         }
-
         String sqlQuery = textFromFile;
         String[] sqlQueryParts = sqlQuery.split("-");
-            for (int i = 0; i < sqlQueryParts.length; i++) {
-                try {
-                    conn = DBConnection.createConnection();
-                    state = conn.createStatement();
-                    state.execute(sqlQueryParts[i]);
-                    state.execute(sqlQueryParts[i+1]);
-                    i++;
-                    cs = conn.prepareCall("{call getUserByNames(?)}");
-                    cs.setString(1, userName);
-                    cs.execute();
-                    rs = cs.getResultSet();
-                    while (rs.next()) {
-
-                        UserBean userData = new UserBean(rs.getString("userName"), rs.getString("email"),
-                                rs.getString("phone"));
-                        usersByName.put(rs.getString("id"), userData.toString());
-                    }
-                    rs.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+        for (int i = 0; i < sqlQueryParts.length; i++) {
+            try {
+                conn = DBConnection.createConnection();
+                state = conn.createStatement();
+                state.execute(sqlQueryParts[i]);
+                state.execute(sqlQueryParts[i+1]);
+                i++;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
+        }
+    }
+
+    // переименовать smth -> DONE
+    public HashMap<String, String> getUser(String enteredUser) throws IOException, SQLException {
+        ResultSet rs = null;
+        Connection conn;
+        CallableStatement cs;
+        HashMap<String, String > usersByName = new HashMap<>();
+        String userName = enteredUser;
+        initProcedure();
+        //  в статик переменную -> DONE
+        try {
+            conn = DBConnection.createConnection();
+            cs = conn.prepareCall("{call getUserByNames(?)}");
+            cs.setString(1, userName);
+            cs.execute();
+            rs = cs.getResultSet();
+            while (rs.next()) {
+                UserBean userData = new UserBean(rs.getString("userName"), rs.getString("email"),
+                        rs.getString("phone"));
+                usersByName.put(rs.getString("id"), userData.toString());
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
         return usersByName;
     }
 }
