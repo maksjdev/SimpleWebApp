@@ -15,7 +15,6 @@ public class UserDao {
 
     private static String sql = "INSERT INTO users (userName, email, phone) VALUES (?, ?, ?)";
     private static String filename = "D:\\AndersenProjects2\\SimpleWebApp\\web\\WEB-INF\\lib\\MyQueryUser.sql";
-    private static StringBuilder thisIsFeature = new StringBuilder("')");
 
     // сделать Void -> DONE
     public void addUser(UserBean userBean) {
